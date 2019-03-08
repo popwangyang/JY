@@ -1,16 +1,24 @@
 # jy-admin
+#鲸易版权-平台管理后台
 
-## Project setup
+##项目环境
+vue-cli3.0脚手架
+
+使用模块
+   [CompressionWebpackPlugin](https://github.com/webpack-contrib/compression-webpack-plugin）
+   [CompressionWebpackPlugin](https://github.com/webpack-contrib/compression-webpack-plugin）
+
+## 项目设置
 ```
 yarn install
 ```
 
-### Compiles and hot-reloads for development
+### 启动开发环境项目
 ```
-yarn run serve
+yarn run dev
 ```
 
-### Compiles and minifies for production
+### 打包项目到生产环境
 ```
 yarn run build
 ```
