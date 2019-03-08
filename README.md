@@ -5,8 +5,10 @@
 vue-cli3.0脚手架
 
 使用模块
-   [CompressionWebpackPlugin](https://github.com/webpack-contrib/compression-webpack-plugin）
-   [CompressionWebpackPlugin](https://github.com/webpack-contrib/compression-webpack-plugin）
+
+[打包gzip模块](https://github.com/webpack-contrib/compression-webpack-plugin）
+[图片压缩模块](https://github.com/Klathmon/imagemin-webpack-plugin）
+[生产环境去除console.log输出](https://github.com/webpack-contrib/terser-webpack-plugin）
 
 ## 项目设置
 ```
