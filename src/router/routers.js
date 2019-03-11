@@ -162,7 +162,7 @@ export default [
           icon: 'md-add',
           title: '合同到账审批'
         },
-        component: () => import('@/view/Finance/Finance-Approval.vue')
+        component: () => import('@/view/Finance/Finance-Approval')
       },
       {
         path: 'Finance-Settlement',
