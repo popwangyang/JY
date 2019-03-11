@@ -50,25 +50,6 @@ export default [
     ]
   },
   {
-    path: '/operation',
-    name: 'operation',
-    component: Main,
-    meta: {
-      hideInBread: true
-    },
-    children: [
-      {
-        path: 'operation_page',
-        name: 'operation_page',
-        meta: {
-          icon: '_qq',
-          title: '运营管理'
-        },
-        component: () => import('@/view/operation-page.vue')
-      }
-    ]
-  },
-  {
     path: '/message',
     name: 'message',
     component: Main,
@@ -147,6 +128,72 @@ export default [
     ]
   },
   {
+    path: '/operation',
+    name: 'operation',
+    component: Main,
+    meta: {
+      hideInBread: true
+    },
+    children: [
+      {
+        path: 'operation_page',
+        name: 'operation_page',
+        meta: {
+          icon: '_qq',
+          title: '运营管理'
+        },
+        component: () => import('@/view/operation-page.vue')
+      }
+    ]
+  },
+  {
+    path: '/Statistics',
+    name: 'Statistics',
+    meta: {
+      icon: 'ios-stats',
+      title: '数据统计'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'Statistics-page',
+        name: 'Statistics-page',
+        meta: {
+          icon: 'md-add',
+          title: '歌曲点播数据统计'
+        },
+        component: () => import('@/view/Statistics/Statistics-page.vue')
+      },
+      {
+        path: 'Statistics-place',
+        name: 'Statistics-place',
+        meta: {
+          icon: 'md-download',
+          title: '场所点播数据统计'
+        },
+        component: () => import('@/view/Statistics/Statistics-place.vue')
+      },
+      {
+        path: 'Statistics-Obligee',
+        name: 'Statistics-Obligee',
+        meta: {
+          icon: 'md-download',
+          title: '权利人结算数据统计'
+        },
+        component: () => import('@/view/Statistics/Statistics-Obligee.vue')
+      },
+      {
+        path: 'Statistics-bill',
+        name: 'Statistics-bill',
+        meta: {
+          icon: 'md-download',
+          title: '场所账单数据统计'
+        },
+        component: () => import('@/view/Statistics/Statistics-bill.vue')
+      }
+    ]
+  },
+  {
     path: '/Finance',
     name: 'Finance',
     meta: {
@@ -172,6 +219,15 @@ export default [
           title: '结算管理'
         },
         component: () => import('@/view/Finance/Finance-Settlement.vue')
+      },
+      {
+        path: 'Finance-refund',
+        name: 'Finance-refund',
+        meta: {
+          icon: 'md-download',
+          title: '退款管理'
+        },
+        component: () => import('@/view/Finance/Finance-refund.vue')
       }
     ]
   },
@@ -196,58 +252,11 @@ export default [
     ]
   },
   {
-    path: '/Song',
-    name: 'Song',
+    path: '/setting',
+    name: 'setting',
     meta: {
       icon: 'ios-stats',
-      title: '歌曲点播数据'
-    },
-    component: Main,
-    children: [
-      {
-        path: 'Song-page',
-        name: 'Song-page',
-        meta: {
-          icon: 'md-add',
-          title: '歌曲点播数据统计'
-        },
-        component: () => import('@/view/Song/Song-page.vue')
-      },
-      {
-        path: 'Song-place',
-        name: 'Song-place',
-        meta: {
-          icon: 'md-download',
-          title: '场所点播数据统计'
-        },
-        component: () => import('@/view/Song/Song-place.vue')
-      }
-    ]
-  },
-  {
-    path: '/VOD',
-    name: 'VOD',
-    meta: {
-      hideInBread: true
-    },
-    component: Main,
-    children: [
-      {
-        path: 'VOD_page',
-        name: 'VOD_page',
-        meta: {
-          icon: 'md-planet',
-          title: 'VOD品牌管理'
-        },
-        component: () => import('@/view/VOD/VOD-page.vue')
-      }
-    ]
-  },
-  {
-    path: '/Jurisdiction',
-    name: 'Jurisdiction',
-    meta: {
-      hideInBread: true
+      title: '设置'
     },
     component: Main,
     children: [
@@ -258,18 +267,8 @@ export default [
           icon: 'ios-bug',
           title: '组织权限管理'
         },
-        component: () => import('@/view/Jurisdiction/Jurisdiction-page.vue')
-      }
-    ]
-  },
-  {
-    path: '/user',
-    name: 'user',
-    meta: {
-      hideInBread: true
-    },
-    component: Main,
-    children: [
+        component: () => import('@/view/setting/Jurisdiction-page.vue')
+      },
       {
         path: 'user-page',
         name: 'user-page',
@@ -277,10 +276,29 @@ export default [
           icon: 'ios-navigate',
           title: '用户管理'
         },
-        component: () => import('@/view/user/user-page.vue')
+        component: () => import('@/view/setting/user-page.vue')
+      },
+      {
+        path: 'VOD_page',
+        name: 'VOD_page',
+        meta: {
+          icon: 'md-planet',
+          title: 'VOD品牌管理'
+        },
+        component: () => import('@/view/setting/VOD-page.vue')
+      },
+      {
+        path: 'parameter-page',
+        name: 'parameter-page',
+        meta: {
+          icon: 'ios-navigate',
+          title: '参数设置'
+        },
+        component: () => import('@/view/setting/parameter-page.vue')
       }
     ]
   },
+
   {
     path: '/argu',
     name: 'argu',
