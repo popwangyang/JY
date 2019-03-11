@@ -1,22 +1,28 @@
-<!--
-    @Time    : 2019/3/4 13:01
-    @Author  : wangzhaoguang
-    @Email   : wangzhaoguang@hlchang.com
-    @File    : Recharge.vue
-    @Software: webstrom
-    @license : 娱网科道信息技术有限公司 copyright  2016-2017-->
+
 <template>
     <div class="tmp">
-        充值订单
+        <div class="tmp-box1">
+			<Search @searchBtn="searchBtn" @exportFile="exportFile"/>
+		</div>
+		<div class="tmp-box2"></div>
+		<div class="tmp-box3"></div>
     </div>
 </template>
 <script>
+import './Recharge.less'
+import Search from './components/Search'
 export default {
-  components: {},
+  components: { Search },
   data () {
     return {}
-  }
+  },
+  methods: {
+  	searchBtn(data){
+  		console.log(data)
+  	},
+  	exportFile(){
+  		console.log("exportFile")
+  	}
+  },
 }
 </script>
-<style scoped>
-</style>

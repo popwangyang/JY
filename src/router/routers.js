@@ -247,7 +247,7 @@ export default [
           title: '充值订单',
           beforeCloseName: 'before_close_normal'
         },
-        component: () => import('@/view/Recharge/Recharge.vue')
+        component: () => import('@/view/Recharge/Recharge')
       }
     ]
   },
