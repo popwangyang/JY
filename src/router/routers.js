@@ -218,7 +218,7 @@ export default [
           icon: 'md-download',
           title: '结算管理'
         },
-        component: () => import('@/view/Finance/Finance-Settlement.vue')
+        component: () => import('@/view/Finance/Finance-Settlement')
       },
       {
         path: 'Finance-refund',
@@ -227,7 +227,7 @@ export default [
           icon: 'md-download',
           title: '退款管理'
         },
-        component: () => import('@/view/Finance/Finance-refund.vue')
+        component: () => import('@/view/Finance/Finance-refund')
       }
     ]
   },

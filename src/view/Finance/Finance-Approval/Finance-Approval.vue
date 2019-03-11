@@ -213,9 +213,6 @@ export default {
 	exportFile(){
 		console.log("exportFile")
 	},
-	clickHandler(){
-		
-	},
 	pageChange(index){
 		console.log(index);
 		this.pageIndex = index;
