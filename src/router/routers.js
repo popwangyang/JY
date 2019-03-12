@@ -260,6 +260,24 @@ export default [
     },
     component: Main,
     children: [
+			{
+				path: 'OperationLog-page',
+				name: 'OperationLog-page',
+				meta: {
+				  hideInMenu:true,
+					title: '操作日志'
+				},
+				component: () => import('@/view/setting/OperationLog-page')
+			},
+			{
+				path: 'addEmployee-page',
+				name: 'addEmployee-page',
+				meta: {
+				  hideInMenu:true,
+					title: '新增员工'
+				},
+				component: () => import('@/view/setting/addEmployee-page')
+			},
       {
         path: 'Jurisdiction_page',
         name: 'Jurisdiction_page',
@@ -267,7 +285,7 @@ export default [
           icon: 'ios-bug',
           title: '组织权限管理'
         },
-        component: () => import('@/view/setting/Jurisdiction-page.vue')
+        component: () => import('@/view/setting/Jurisdiction-page')
       },
       {
         path: 'user-page',
@@ -276,7 +294,7 @@ export default [
           icon: 'ios-navigate',
           title: '用户管理'
         },
-        component: () => import('@/view/setting/user-page.vue')
+        component: () => import('@/view/setting/user-page')
       },
       {
         path: 'VOD_page',
