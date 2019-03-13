@@ -303,7 +303,7 @@ export default [
           icon: 'md-planet',
           title: 'VOD品牌管理'
         },
-        component: () => import('@/view/setting/VOD-page.vue')
+        component: () => import('@/view/setting/VOD-page')
       },
       {
         path: 'parameter-page',

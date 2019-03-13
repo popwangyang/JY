@@ -16,7 +16,7 @@
 		
 		<span>
 			<Button icon="md-add" style="margin-right: 20px;" type="info" @click="addEmployee()" >新增</Button>
-		    <Button>操作日志</Button>
+		    <Button @click="goRZ">操作日志</Button>
 		</span>
 	</div>
 </template>
@@ -38,6 +38,9 @@
 			},
 			addEmployee(){
 				this.$router.push("addEmployee-page")
+			},
+			goRZ(){
+				this.$router.push("OperationLog-page")
 			}
 		},
 	}
