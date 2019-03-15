@@ -35,7 +35,7 @@
 			return{
 				addGWFlage:false,
 				arr:[
-					{name:'管理员', code:'001', isSelect:false},
+					{name:'管理员', code:'001', isSelect:true},
 					{name:'超级管理员', code:'002', isSelect:false},
 					{name:'管理员', code:'003', isSelect:false},
 					{name:'管理员', code:'004', isSelect:false}

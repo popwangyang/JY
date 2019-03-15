@@ -107,10 +107,12 @@ export default {
     },
     // 获取用户相关信息
     getUserInfo ({ state, commit }) {
+			console.log('getUserInfo')
       return new Promise((resolve, reject) => {
         try {
           getUserInfo(state.token).then(res => {
             const data = res.data
+						console.log('getUserInfo', data)
             commit('setAvator', data.avator)
             commit('setUserName', data.name)
             commit('setUserId', data.user_id)

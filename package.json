@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "cascader-multi": "^2.0.3",
     "compression-webpack-plugin": "^2.0.0",
     "imagemin-webpack-plugin": "^2.4.2",
     "iview": "^3.2.2",

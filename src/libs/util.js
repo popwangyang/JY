@@ -392,7 +392,9 @@ export const scrollTop = (el, from = 0, to, duration = 500, endCallback) => {
  * @param {Object} vm Vue实例
  */
 export const setTitle = (routeItem, vm) => {
+
   const handledRoute = getRouteTitleHandled(routeItem)
+		console.log(routeItem, vm,handledRoute)
   const pageTitle = showTitle(handledRoute, vm)
   const resTitle = pageTitle ? `${title} - ${pageTitle}` : title
   window.document.title = resTitle

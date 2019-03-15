@@ -34,8 +34,8 @@
 					</FormItem>
 					<FormItem label="是否启用：">
 						<i-switch v-model="formInline.QiYongstate" size="large">
-							<span slot="open">On</span>
-							<span slot="close">Off</span>
+							<span slot="open">开</span>
+							<span slot="close">关</span>
 						</i-switch>
 				    </FormItem>
 				 </Form>
