@@ -32,3 +32,17 @@ export const getUserInfo = req => {
 export const logout = req => {
   return null
 }
+
+export const getIdentifyungCode = req => {
+	
+		return { data : '验证码已发送至邮箱，请注意查收。'}
+	
+}
+
+export const testIdentifyungCode = req => {
+	 req = JSON.parse(req.body)
+	 return {
+		 data:"验证通过",
+		 IdentifyungCode:req.code
+	 }
+}

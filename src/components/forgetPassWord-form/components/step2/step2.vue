@@ -1,17 +1,17 @@
 <template>
-    <Form ref="formInline" :model="formInline" :rules="ruleInline" >
-        <FormItem prop="user">
-            <Input type="password" v-model="formInline.user" placeholder="Username">
-                <Icon type="ios-person-outline" slot="prepend"></Icon>
+    <Form ref="formCustom" :model="formCustom" :rules="formCustom" >
+        <FormItem prop="passwd">
+            <Input type="password" v-model="formCustom.passwd" placeholder="请输入新密码">
+                <Icon type="ios-lock-outline" slot="prepend"></Icon>
             </Input>
         </FormItem>
-        <FormItem prop="password">
-            <Input type="password" v-model="formInline.password" placeholder="Password">
+        <FormItem prop="passwdCheck">
+            <Input type="password" v-model="formCustom.passwdCheck" placeholder="请再次输入密码">
                 <Icon type="ios-lock-outline" slot="prepend"></Icon>
             </Input>
         </FormItem>
         <FormItem>
-            <Button type="primary" @click="handleSubmit('formInline')" long>确认</Button>
+            <Button type="primary" @click="handleSubmit('formCustom')" long>确认</Button>
         </FormItem>
 		<div style="display: flex;justify-content: center;">
 			<Button type="text" style="color: #57a3f3;">已有账号？登录</Button>				 
@@ -19,26 +19,67 @@
     </Form>
 </template>
 <script>
-    export default {
+     export default {
         data () {
+            const validatePass = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('Please enter your password'));
+                } else {
+                    if (this.formCustom.passwdCheck !== '') {
+                        // 对第二个密码框单独验证
+                        this.$refs.formCustom.validateField('passwdCheck');
+                    }
+                    callback();
+                }
+            };
+            const validatePassCheck = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('Please enter your password again'));
+                } else if (value !== this.formCustom.passwd) {
+                    callback(new Error('The two input passwords do not match!'));
+                } else {
+                    callback();
+                }
+            };
+            const validateAge = (rule, value, callback) => {
+                if (!value) {
+                    return callback(new Error('Age cannot be empty'));
+                }
+                // 模拟异步验证效果
+                setTimeout(() => {
+                    if (!Number.isInteger(value)) {
+                        callback(new Error('Please enter a numeric value'));
+                    } else {
+                        if (value < 18) {
+                            callback(new Error('Must be over 18 years of age'));
+                        } else {
+                            callback();
+                        }
+                    }
+                }, 1000);
+            };
+            
             return {
-                formInline: {
-                    user: '',
-                    password: ''
+                formCustom: {
+                    passwd: '',
+                    passwdCheck: '',
+                    age: ''
                 },
-                ruleInline: {
-                    user: [
-                        { required: true, message: 'Please fill in the user name', trigger: 'blur' }
+                ruleCustom: {
+                    passwd: [
+                        { validator: validatePass, trigger: 'blur' }
                     ],
-                    password: [
-                        { required: true, message: 'Please fill in the password.', trigger: 'blur' },
-                        { type: 'string', min: 6, message: 'The password length cannot be less than 6 bits', trigger: 'blur' }
+                    passwdCheck: [
+                        { validator: validatePassCheck, trigger: 'blur' }
+                    ],
+                    age: [
+                        { validator: validateAge, trigger: 'blur' }
                     ]
                 }
             }
         },
         methods: {
-            handleSubmit(name) {
+            handleSubmit (name) {
                 this.$refs[name].validate((valid) => {
                     if (valid) {
                         this.$Message.success('Success!');
@@ -46,6 +87,9 @@
                         this.$Message.error('Fail!');
                     }
                 })
+            },
+            handleReset (name) {
+                this.$refs[name].resetFields();
             }
         }
     }

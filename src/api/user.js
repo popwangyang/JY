@@ -83,3 +83,22 @@ export const restoreTrash = msg_id => {
     }
   })
 }
+
+// 根据邮箱获取验证码
+export const getIdentifyungCode = () => {
+	return axios.request({
+	  url: 'getIdentifyungCode',
+	  method: 'get'
+	})
+}
+
+// 验证验证码
+export const testIdentifyungCode = (code) => {
+	return axios.request({
+	  url: 'testIdentifyungCode',
+	  method: 'get',
+		data: {
+			code: code
+		}
+	})
+}

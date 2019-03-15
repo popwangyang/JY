@@ -23,6 +23,7 @@
   </Form>
 </template>
 <script>
+	import { setUser, getUser } from '@/libs/util'
 export default {
   name: 'LoginForm',
   props: {
@@ -45,9 +46,9 @@ export default {
   },
   data () {
     return {
-			
+			isLogout:false,
       form: {
-        userName: 'admin',
+        userName: '',
         password: ''
       }
     }
@@ -71,6 +72,17 @@ export default {
         }
       })
     }
-  }
+  },
+	mounted(){
+		console.log(getUser(),this.$store.state.user.isLogout)
+		if(getUser() && !this.$store.state.user.isLogout){
+			this.form = getUser()	
+			this.$emit('on-success-valid', {
+			  userName: this.form.userName,
+			  password: this.form.password
+			})
+			this.$store.commit('updataLoginState', false)
+		}
+	}
 }
 </script>

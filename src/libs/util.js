@@ -5,6 +5,21 @@ import { forEach, hasOneOf, objEqual } from '@/libs/tools'
 const { title, cookieExpires, useI18n } = config
 
 export const TOKEN_KEY = 'token'
+export const USER_KEY = 'user'
+
+export const setUser = (data) => {
+	Cookies.set(USER_KEY, JSON.stringify(data), {expires: 15})
+}
+
+export const getUser = () => {
+	const user = Cookies.get(USER_KEY)
+	if(user) return JSON.parse(user)
+	else return false
+}
+
+export const removeUser = () => {
+	Cookies.remove(USER_KEY)
+}
 
 export const setToken = (token) => {
   Cookies.set(TOKEN_KEY, token, { expires: cookieExpires || 1 })
@@ -26,6 +41,8 @@ const showThisMenuEle = (item, access) => {
     else return false
   } else return true
 }
+
+
 /**
  * @param {Array} list 通过路由列表得到菜单列表
  * @returns {Array}

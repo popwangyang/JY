@@ -23,7 +23,8 @@ export default {
     messageUnreadList: [],
     messageReadedList: [],
     messageTrashList: [],
-    messageContentStore: {}
+    messageContentStore: {},
+		isLogout:false
   },
   mutations: {
     setAvator (state, avatorPath) {
@@ -65,7 +66,10 @@ export default {
       const msgItem = state[from].splice(index, 1)[0]
       msgItem.loading = false
       state[to].unshift(msgItem)
-    }
+    },
+		updataLoginState (state, flag) {
+			state.isLogout = flag
+		}
   },
   getters: {
     messageUnreadCount: state => state.messageUnreadList.length,
@@ -95,6 +99,7 @@ export default {
         logout(state.token).then(() => {
           commit('setToken', '')
           commit('setAccess', [])
+					commit('updataLoginState', true)
           resolve()
         }).catch(err => {
           reject(err)

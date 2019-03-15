@@ -1,11 +1,11 @@
 import Mock from 'mockjs'
-import { login, logout, getUserInfo } from './login'
-import { getTableData, getDragList, uploadImage, getOrgData, getTreeSelectData } from './data'
+import { login, logout, getUserInfo, getIdentifyungCode, testIdentifyungCode } from './login'
+import { getTableData, getDragList, uploadImage, getOrgData, getTreeSelectData,  } from './data'
 // import { getMessageInit, getContentByMsgId, hasRead, removeReaded, restoreTrash, messageCount } from './user'
 
 // 配置Ajax请求延时，可用来测试网络延迟大时项目中一些效果
 Mock.setup({
-  timeout: 1000
+  timeout: '1000-2000'
 })
 
 // 登录相关和获取用户信息
@@ -24,5 +24,8 @@ Mock.mock(/\/image\/upload/, uploadImage)
 // Mock.mock(/\/message\/count/, messageCount)
 Mock.mock(/\/get_org_data/, getOrgData)
 Mock.mock(/\/get_tree_select_data/, getTreeSelectData)
+
+Mock.mock(/\/getIdentifyungCode/, getIdentifyungCode) // 获取验证码
+Mock.mock(/\/testIdentifyungCode/, testIdentifyungCode) //  验证验证码
 
 export default Mock

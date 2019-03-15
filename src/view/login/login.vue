@@ -26,10 +26,12 @@
 </template>
 
 <script>
+import { setUser, removeUser, getUser } from '@/libs/util'
 import LoginForm from '_c/login-form'
 import ForgetPassWordForm from '_c/forgetPassWord-form'
 import { mapActions } from 'vuex'
 export default {
+	name:'login',
   components: {
     LoginForm,
 		ForgetPassWordForm
@@ -48,7 +50,12 @@ export default {
     ]),
     handleSubmit ({ userName, password }) {
       this.handleLogin({ userName, password }).then(res => {
-        this.getUserInfo().then(res => {
+        this.getUserInfo().then(res => {					
+						if(this.automaticLogon){
+						  setUser({ userName, password })					
+						}else{
+							removeUser()
+						}								
           this.$router.push({
             name: this.$config.homeName
           })
@@ -57,6 +64,7 @@ export default {
 				this.$Message.error('登录失败!');
 			})
     },
+		
 		changeTitle(a){
 			this.forgetTitle =  a == 1 ?  '忘记密码':'新密码设置'
 		},
@@ -70,6 +78,10 @@ export default {
   },
 	mounted(){
 		
+		if(getUser()){
+			  this.automaticLogon = true;
+				// this.handleSubmit(getUser('user'))		
+		}
 	}
 }
 </script>
