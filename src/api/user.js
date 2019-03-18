@@ -85,20 +85,38 @@ export const restoreTrash = msg_id => {
 }
 
 // 根据邮箱获取验证码
-export const getIdentifyungCode = () => {
+export const getIdentifyungCode = (email) => {
 	return axios.request({
-	  url: 'getIdentifyungCode',
-	  method: 'get'
+	  url: 'copyright/rbac/verification-code',
+	  method: 'get',
+		data: {
+			username: email
+		}
 	})
 }
 
 // 验证验证码
-export const testIdentifyungCode = (code) => {
+export const testIdentifyungCode = ({ username, code }) => {
+	console.log(username, code)
 	return axios.request({
-	  url: 'testIdentifyungCode',
-	  method: 'get',
+	  url: 'copyright/rbac/verification-code',
+	  method: 'post',
 		data: {
+			username:username,
 			code: code
+		}
+	})
+}
+
+// 确认修改新密码；
+export const ConfirmToModifyTheNewPassword = ({ username, code, password}) => {
+	return axios.request({
+		url: 'copyright/rbac/password-reset-self',
+		method: 'put',
+		data: {
+			username:username,
+			code:code,
+			password:password
 		}
 	})
 }

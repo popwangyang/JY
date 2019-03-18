@@ -18,7 +18,7 @@
     <slot></slot>
 		</FormItem>
     <FormItem>
-      <Button @click="handleSubmit" type="primary" long>登录</Button>
+      <Button @click="handleSubmit" type="primary" long :loading='loading'>登录</Button>
     </FormItem>
   </Form>
 </template>
@@ -50,7 +50,8 @@ export default {
       form: {
         userName: '',
         password: ''
-      }
+      },
+			loading:false
     }
   },
   computed: {
@@ -75,8 +76,10 @@ export default {
   },
 	mounted(){
 		console.log(getUser(),this.$store.state.user.isLogout)
-		if(getUser() && !this.$store.state.user.isLogout){
+		
+		if(getUser()){
 			this.form = getUser()	
+			if(this.$store.state.user.isLogout) return;
 			this.$emit('on-success-valid', {
 			  userName: this.form.userName,
 			  password: this.form.password

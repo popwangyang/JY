@@ -19,7 +19,7 @@ const USER_MAP = {
 export const login = req => {
   
   req = JSON.parse(req.body)
-	
+	console.log(req)
   return { token: USER_MAP[req.userName].token }
 }
 
@@ -35,14 +35,21 @@ export const logout = req => {
 
 export const getIdentifyungCode = req => {
 	
-		return { data : '验证码已发送至邮箱，请注意查收。'}
+		return { data : '验证码已发送至邮箱，请注意查收。!!!!!'}
 	
 }
 
 export const testIdentifyungCode = req => {
-	 req = JSON.parse(req.body)
+	 // req = JSON.parse(req.body)
+	 console.log(req.body)
 	 return {
 		 data:"验证通过",
 		 IdentifyungCode:req.code
+	 }
+}
+
+export const ConfirmToModifyTheNewPassword = req => {
+	 return {
+		 data:"新密码修改成功"
 	 }
 }

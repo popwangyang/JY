@@ -8,7 +8,7 @@
 	export default {
 		data(){
 			return{
-				timeValue:10,
+				timeValue:120,
 				time:null
 			}
 		},
@@ -24,7 +24,10 @@
 				}, 1000)
 			},
 			clearTime(){
-				clearInterval(this.time)
+				if(this.time != null){
+					clearInterval(this.time);
+					this.time = null;
+				}				
 			}
 		},
 		mounted(){

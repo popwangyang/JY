@@ -7,14 +7,19 @@ const { title, cookieExpires, useI18n } = config
 export const TOKEN_KEY = 'token'
 export const USER_KEY = 'user'
 
-export const setUser = (data) => {
-	Cookies.set(USER_KEY, JSON.stringify(data), {expires: 15})
-}
-
 export const getUser = () => {
 	const user = Cookies.get(USER_KEY)
 	if(user) return JSON.parse(user)
 	else return false
+}
+
+export const setUser = (data) => {
+	var user = getUser();
+	if(user) {
+		if(JSON.stringify(data) != JSON.stringify(user)) {
+			Cookies.set(USER_KEY, JSON.stringify(data), {expires: 15})
+		}
+	}
 }
 
 export const removeUser = () => {

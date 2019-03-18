@@ -15,7 +15,6 @@ const router = new Router({
 const LOGIN_PAGE_NAME = 'login'
 
 const turnTo = (to, access, next) => {
-  console.log(to, access, '900')
   if (canTurnTo(to.name, access, routes)) next() // 有权限，可访问
   else next({ replace: true, name: 'error_401' }) // 无权限，重定向到401页面
 }
@@ -41,7 +40,8 @@ router.beforeEach((to, from, next) => {
       name: homeName // 跳转到homeName页
     })
   } else {
-    console.log('4')
+    console.log('4', store.state.user.hasGetInfo)
+		
     if (store.state.user.hasGetInfo) {
       turnTo(to, store.state.user.access, next)
     } else {

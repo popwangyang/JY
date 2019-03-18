@@ -5,9 +5,9 @@
 <template>
   <div class="login">
     <div class="login-con">
-      <Card icon="log-in" title="欢迎登录" :bordered="false" v-if="!isChangePass">
+      <Card  icon="log-in" title="欢迎登录" :bordered="false" v-if="!isChangePass">
         <div class="form-con">
-          <login-form @on-success-valid="handleSubmit" @on-change-pass="changePassBtn">
+          <login-form ref="loginForm" @on-success-valid="handleSubmit">
 						<div style="display: flex;justify-content: space-between;align-items: center;padding-left: 10px;">
 							<Checkbox v-model="automaticLogon" @on-change="automaticLogonBtn">自动登录</Checkbox>
 							<Button type="text" style="color: #57a3f3;" @click="changePassBtn">忘记密码</Button>
@@ -18,7 +18,7 @@
       </Card>
 			 <Card icon="log-in" :title="forgetTitle" :bordered="false" v-if="isChangePass">
 			  <div class="form-con">
-			   <ForgetPassWordForm @on-change-title="changeTitle"/>
+			   <ForgetPassWordForm @on-change-title="changeTitle" @on-back-login="changePassBtn"/>
 			  </div>
 			</Card>
     </div>
@@ -69,7 +69,7 @@ export default {
 			this.forgetTitle =  a == 1 ?  '忘记密码':'新密码设置'
 		},
 		changePassBtn(){
-			this.isChangePass = true;
+			this.isChangePass = !this.isChangePass;
 		},
 		automaticLogonBtn(e){
 			let code = e ? 0:1;
@@ -79,8 +79,7 @@ export default {
 	mounted(){
 		
 		if(getUser()){
-			  this.automaticLogon = true;
-				// this.handleSubmit(getUser('user'))		
+			  this.automaticLogon = true;	
 		}
 	}
 }

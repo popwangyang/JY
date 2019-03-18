@@ -17,16 +17,15 @@
         <FormItem>
             <Button type="primary"  @click="handleSubmit('formInline')" long :disabled="!disabled2" :loading="loading2">确认</Button>
         </FormItem>
-		<div style="display: flex;justify-content: center;">
-			<Button type="text" style="color: #57a3f3;">已有账号？登录</Button>				 
-		</div>
+		<BackLogin @on-back-login="onBackLogin"/>
     </Form>	
 </template>
 <script>
 	import { getIdentifyungCode, testIdentifyungCode } from "@/api/user"
 	import TimeoutComponent  from './timeoutComponent'
+	import BackLogin from '../backLogin'
     export default {
-		components:{ TimeoutComponent },
+		components:{ TimeoutComponent, BackLogin },
         data () {
             return {
                 formInline: {
@@ -64,28 +63,47 @@
 				this.loading2 = true;
                 this.$refs[name].validate((valid) => {
                     if (valid) {
-						testIdentifyungCode(this.formInline.password).then((res) => {
-							console.log(res)
+						var send_data = {
+							username:this.formInline.email,
+							code:this.formInline.password
+						}
+						testIdentifyungCode(send_data).then((res) => {
+							console.log(res,"ppppppppppp")
+							if(this.$refs.TimeOut){
+								this.$refs.TimeOut.clearTime();
+							}							
 							this.loading2 = false;
 							this.$Message.success('Success!');
-							this.$emit("on-change-step", 2)
+							this.$emit("on-change-step", { step:2, username:this.formInline.email, code:this.formInline.password });							
 						}).catch((err) => {
 							this.loading2 = false;
 							this.$Message.error("验证失败，请重新验证！")
 						})
-                    }
+                    }else{
+						this.loading2 = false;
+					}
                 })
             },
 			getIdentifyungCode(){
 				this.loading1 = true;
-				getIdentifyungCode().then((res) => {
+				getIdentifyungCode(this.formInline.email).then((res) => {
 					console.log(res)
 					this.loading1 = false;
 					this.changeTimeOut(true);
+					this.$Message.success('验证码已发送到你的邮箱，请注意查收!');
+				}).catch((err) => {
+					this.loading1 = false;
+					this.$Message.error('获取验证码失败，请重新获取！');
 				})
 			},
 			changeTimeOut(flage){
 				this.showTimeOut = flage;
+			},
+			onBackLogin(){
+				if(this.$refs.TimeOut){
+					this.$refs.TimeOut.clearTime();
+				}	
+				this.$emit("on-back-login")				
 			}
         }
     }

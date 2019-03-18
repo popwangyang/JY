@@ -1,10 +1,10 @@
 <template>
     <div>
 		<div v-show="step === 1">
-			<Step1 @on-change-step="chaneStep"/>
+			<Step1 @on-change-step="chaneStep" @on-back-login="onBackLogin"/>
 		</div>
 		<div v-show="step === 2">
-			<Step2/>
+			<Step2  @on-back-login="onBackLogin" :username="username" :code="code"/>
 		</div>
 	</div>	
 </template>
@@ -16,13 +16,20 @@
 		components:{ Step1, Step2 },
         data () {
             return {
-                step : 1
+                step : 1,
+				username:"",
+				code:""
             }
         },
         methods: {
-           chaneStep(step){
-			   this.step = step;
-			   this.$emit('on-change-title', step)
+           chaneStep(data){
+			   this.step = data.step;
+			   this.username = data.username;
+			   this.code = data.code;
+			   this.$emit('on-change-title', data.step)
+		   },
+		   onBackLogin(){
+			   this.$emit("on-back-login")
 		   }
         }
     }
