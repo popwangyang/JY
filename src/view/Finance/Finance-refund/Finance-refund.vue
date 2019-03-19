@@ -99,7 +99,6 @@ export default {
             var TextConent = null
             var showReason = false
             var isLastList = params.index == this.data.length - 1 ? 'right-end' : 'right-start'
-            console.log(params.index, this.data.length)
             switch (parseInt(params.row.state)) {
               case 0:
                 color = 'red'
@@ -243,6 +242,7 @@ export default {
     }
   },
   mounted() {
+		console.log(this.$store.state.user)
     var arr = new Array(10)
     for (var i = 0; i < arr.length; i++) {
       arr[i] = Object.create(this.data[0])

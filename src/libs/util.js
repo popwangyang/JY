@@ -1,3 +1,4 @@
+import { Base64 }  from 'js-base64';
 import Cookies from 'js-cookie'
 // cookie保存的天数
 import config from '@/config'
@@ -76,6 +77,7 @@ export const getMenuByRouter = (list, access) => {
  * @returns {Array}
  */
 export const getBreadCrumbList = (route, homeRoute) => {
+	
   let homeItem = { ...homeRoute, icon: homeRoute.meta.icon }
   let routeMetched = route.matched
   if (routeMetched.some(item => item.name === homeRoute.name)) return [homeItem]
@@ -97,6 +99,7 @@ export const getBreadCrumbList = (route, homeRoute) => {
   res = res.filter(item => {
     return !item.meta.hideInMenu
   })
+	console.log([{ ...homeItem, to: homeRoute.path }, ...res])
   return [{ ...homeItem, to: homeRoute.path }, ...res]
 }
 
@@ -421,3 +424,25 @@ export const setTitle = (routeItem, vm) => {
   const resTitle = pageTitle ? `${title} - ${pageTitle}` : title
   window.document.title = resTitle
 }
+
+//base64加密
+export const baseJs=(type,name,val)=> {
+    switch (type){
+        case 'setItem':
+            localStorage.setItem(Base64.encode(name),Base64.encode(val));
+            break;
+        case 'getItem':
+            let str=Base64.encode(name);
+            if(localStorage.getItem(str)){
+                let deCode=Base64.decode(localStorage.getItem(str));
+                return deCode;
+            }else{
+                return undefined
+            }
+            break;
+        case 'removeItem':
+            localStorage.removeItem(Base64.encode(name));
+            break;
+    }
+};
+

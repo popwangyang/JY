@@ -9,14 +9,15 @@ import {
   restoreTrash,
   getUnreadCount
 } from '@/api/user'
-import { setToken, getToken } from '@/libs/util'
+import { setToken, getToken, baseJs } from '@/libs/util'
 
 export default {
   state: {
     userName: '',
+		password: '',
     userId: '',
     avatorImgPath: '',
-    token: getToken(),
+    token:'',
     access: '',
     hasGetInfo: false,
     unreadCount: 0,
@@ -41,7 +42,7 @@ export default {
     },
     setToken (state, token) {
       state.token = token
-      setToken(token)
+			setToken(token)
     },
     setHasGetInfo (state, status) {
       state.hasGetInfo = status
@@ -85,9 +86,21 @@ export default {
           userName,
           password
         }).then(res => {
-          const data = res.data
-          commit('setToken', data.token)
-          resolve()
+          const data = res.data	
+										console.log(data)
+					baseJs('setItem', 'permission_list', JSON.stringify(data.permission_list));
+					baseJs('setItem', 'permission_tree', JSON.stringify(data.permission_tree));
+					baseJs('setItem', 'user', JSON.stringify(data.user));	
+					
+					
+					// commit('setAvator', data.avator)
+					commit('setUserName', data.user.username)
+					commit('setUserId', data.user.id)
+					commit('setAccess', data.permission_list)
+					commit('setHasGetInfo', true)
+					commit('setToken', btoa(data.token))
+					console.log(data.user)
+          resolve(data)
         }).catch(err => {
           reject(err)
         })
@@ -97,9 +110,13 @@ export default {
     handleLogOut ({ state, commit }) {
       return new Promise((resolve, reject) => {
         logout(state.token).then(() => {
+					baseJs('removeItem', 'permission_list');
+					baseJs('removeItem', 'permission_tree');
+					baseJs('removeItem', 'user');	
+					
           commit('setToken', '')
           commit('setAccess', [])
-					commit('updataLoginState', true)
+					commit('updataLoginState', true) //改变一下登录状态，主要是为了自动登录用
           resolve()
         }).catch(err => {
           reject(err)
@@ -114,23 +131,20 @@ export default {
     getUserInfo ({ state, commit }) {
 			console.log('getUserInfo')
       return new Promise((resolve, reject) => {
-        try {
-          getUserInfo(state.token).then(res => {
-            const data = res.data
-						console.log('getUserInfo', data)
-            commit('setAvator', data.avator)
-            commit('setUserName', data.name)
-            commit('setUserId', data.user_id)
-            commit('setAccess', data.access)
+						let user = JSON.parse(baseJs('getItem', 'user'));	
+						let token = baseJs('getItem', 'token')
+						let permission_tree = JSON.parse(baseJs('getItem', 'permission_tree'))
+						let permission_list = JSON.parse(baseJs('getItem', 'permission_list'))
+						console.log(user, permission_list, permission_tree)
+            commit('setUserName', user.username)
+            commit('setUserId', user.id)
+            commit('setAccess', permission_list)
             commit('setHasGetInfo', true)
-            resolve(data)
-          }).catch(err => {
-            reject(err)
-          })
-        } catch (error) {
-          reject(error)
-        }
-      })
+						
+            resolve(permission_list)
+      }).catch(err => {
+				reject(err)
+			})
     },
     // 此方法用来获取未读消息条数，接口只返回数值，不返回消息列表
     getUnreadMessageCount ({ state, commit }) {

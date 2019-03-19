@@ -46,9 +46,7 @@ export const removeReaded = () => {
   return true
 }
 
-export const restoreTrash = () => {
-  return true
-}
+
 
 export const messageCount = () => {
   return 3

@@ -50,8 +50,8 @@ export default {
     ]),
     handleSubmit ({ userName, password }) {
       this.handleLogin({ userName, password }).then(res => {
-        this.getUserInfo().then(res => {					
-						if(this.automaticLogon){
+        // this.getUserInfo().then(res => {					
+						if(this.automaticLogon){ 
 						  setUser({ userName, password })					
 						}else{
 							removeUser()
@@ -59,7 +59,7 @@ export default {
           this.$router.push({
             name: this.$config.homeName
           })
-        })
+        // })
       }).catch((err) => {
 				this.$Message.error('登录失败!');
 			})
