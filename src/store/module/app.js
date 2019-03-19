@@ -74,20 +74,8 @@ export default {
     }
   },
   actions: {
-<<<<<<< HEAD
 
-=======
-    addErrorLog ({ commit, rootState }, info) {
-      if (!window.location.href.includes('error_logger_page')) commit('setHasReadErrorLoggerStatus', false)
-      const { user: { token, userId, userName } } = rootState
-      let data = {
-        ...info,
-        time: Date.parse(new Date()),
-        token,
-        userId,
-        userName
-      }
-    }
->>>>>>> 67553e1cca8afa04036c4114e40c84615569720e
+
+
   }
 }
