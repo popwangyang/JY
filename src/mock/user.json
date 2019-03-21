@@ -191,7 +191,7 @@
 						{
 							"code": "group_list",
 							"parent": 12,
-							"is_selected": false,
+							"is_selected": true,
 							"children": [],
 							"name": "角色查询",
 							"id": 16,
@@ -446,7 +446,7 @@
 						{
 							"code": "group_list",
 							"parent": 12,
-							"is_selected": false,
+							"is_selected": true,
 							"children": [],
 							"name": "角色查询",
 							"id": 16,

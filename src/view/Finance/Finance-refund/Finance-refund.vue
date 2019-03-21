@@ -113,8 +113,7 @@ export default {
                 TextConent = '已退回'
                 showReason = true
                 break
-            }
-            console.log(color)
+            }           
             var clicle = h('div', {
               style: {
                 background: color,

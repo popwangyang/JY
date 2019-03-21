@@ -2,7 +2,7 @@ import { Base64 }  from 'js-base64';
 import Cookies from 'js-cookie'
 // cookie保存的天数
 import config from '@/config'
-import { forEach, hasOneOf, objEqual } from '@/libs/tools'
+import { forEach, hasOneOf, objEqual, getObj, getItemIndeterminate, getALL } from '@/libs/tools'
 const { title, cookieExpires, useI18n } = config
 
 export const TOKEN_KEY = 'token'
@@ -98,8 +98,7 @@ export const getBreadCrumbList = (route, homeRoute) => {
   })
   res = res.filter(item => {
     return !item.meta.hideInMenu
-  })
-	console.log([{ ...homeItem, to: homeRoute.path }, ...res])
+  })	
   return [{ ...homeItem, to: homeRoute.path }, ...res]
 }
 
@@ -419,7 +418,6 @@ export const scrollTop = (el, from = 0, to, duration = 500, endCallback) => {
 export const setTitle = (routeItem, vm) => {
 
   const handledRoute = getRouteTitleHandled(routeItem)
-		console.log(routeItem, vm,handledRoute)
   const pageTitle = showTitle(handledRoute, vm)
   const resTitle = pageTitle ? `${title} - ${pageTitle}` : title
   window.document.title = resTitle
@@ -446,3 +444,68 @@ export const baseJs=(type,name,val)=> {
     }
 };
 
+// 根据权限树中的is_selected 向其中添加Indeterminate属性；
+export const changeTree = (data) => {
+	data.map((item) => {		
+		if(item.children && (item.children.length > 0)) {
+			changeTree(item.children)
+			item.indeterminate = getItemIndeterminate(item.children);			
+		}
+	})
+	return data;
+}
+/**
+ * 重新编排各个属性的is_selected;分为设定children和设定parent两个部分
+ * 
+ */ 
+export const changeTreeSelected = (data, item) => {
+		function setChildren (arr, flage) {
+			arr.map(item => {
+				item.is_selected = flage;
+				if(item.children && (item.children.length > 0)) {
+					setChildren(item.children, flage);
+				}
+			})
+		}
+		
+		function isCheckAll (arr) {
+			var result = arr.filter(item =>{
+				return item.is_selected
+			})
+			console.log(result, arr)
+			    if(result.length == arr.length ) {
+						  return true;
+					}else{
+						return false;
+					}
+		}
+		
+		function setParent (data, arr) {			
+			 getObj(data, arr[0].parent, 'id')[0].is_selected = isCheckAll(arr);
+			 if(getObj(data, arr[0].parent, 'id')[0].parent != null) {
+				 setParent(data, getObj(data, getObj(data, arr[0].parent, 'id')[0].parent, 'brother'))
+			 }
+		}		
+		setChildren(getObj(data, item.id, 'id'), getObj(data, item.id, 'id')[0].is_selected);
+		if(item.parent != null) {
+			setParent(data, getObj(data, item.parent, 'brother'));			
+		}
+}
+
+
+
+
+
+// 请求token缓冲器；
+var flage = true;
+export const spring = (time) => {
+	var result = flage;	
+	if(flage){		
+		flage = false;
+		setTimeout(() => {
+			flage = true;
+		}, time)
+		return result;
+	}
+	return false;
+}

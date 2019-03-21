@@ -61,7 +61,7 @@ export default [{
 				icon: 'md-notifications',
 				title: '消息中心'
 			},
-			component: () => import('@/view/single-page/message/index.vue')
+			component: () => import('@/view/single-page/message/message')
 		}]
 	},
 	{

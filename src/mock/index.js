@@ -2,7 +2,7 @@ import Mock from 'mockjs'
 
 import { login, logout, getUserInfo, getIdentifyungCode, testIdentifyungCode, ConfirmToModifyTheNewPassword, refshToken } from './login'
 
-import { getMessageInit, getContentByMsgId, hasRead, removeReaded, messageCount } from './user'
+import {  getMessageList, patchMessageReaded, patchAllMessageReaded } from './user'
 
 // 配置Ajax请求延时，可用来测试网络延迟大时项目中一些效果
 Mock.setup({
@@ -16,12 +16,11 @@ Mock.mock(/\/logout/, logout),
 Mock.mock(/\/copyright\/api-token-refresh/, refshToken)
 
 
-Mock.mock(/\/message\/init/, getMessageInit)
-Mock.mock(/\/message\/content/, getContentByMsgId)
-Mock.mock(/\/message\/has_read/, hasRead)
-Mock.mock(/\/message\/remove_readed/, removeReaded)
-Mock.mock(/\/message\/count/, messageCount)
 
+
+Mock.mock(/\/copyright\/rbac\/msg/,'get', getMessageList)
+Mock.mock(/\/copyright\/rbac\/msg\/id/, 'patch', patchMessageReaded)
+Mock.mock(/\/copyright\/rbac\/msg/, 'patch', patchAllMessageReaded)
 
 Mock.mock(/\/copyright\/rbac\/verification-code/,'get', getIdentifyungCode) // 获取验证码
 Mock.mock(/\/copyright\/rbac\/verification-code/,'post', testIdentifyungCode) //  验证验证码

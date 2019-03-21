@@ -2,14 +2,11 @@ import {
   login,
   logout,
   getUserInfo,
-  getMessage,
-  getContentByMsgId,
-  hasRead,
-  removeReaded,
-  restoreTrash,
-  getUnreadCount
+  getMessageList,
+  patchMessageReaded,
+  patchAllMessageReaded
 } from '@/api/user'
-import { setToken, getToken, baseJs } from '@/libs/util'
+import { setToken, getToken, baseJs, changeTree } from '@/libs/util'
 
 export default {
   state: {
@@ -19,12 +16,10 @@ export default {
     avatorImgPath: '',
     token:'',
     access: '',
+	setPermissionTree:'',
     hasGetInfo: false,
     unreadCount: 0,
-    messageUnreadList: [],
-    messageReadedList: [],
-    messageTrashList: [],
-    messageContentStore: {},
+		messageList:[],
 		isLogout:false
   },
   mutations: {
@@ -40,6 +35,9 @@ export default {
     setAccess (state, access) {
       state.access = access
     },
+	setPermissionTree (state, setPermissionTree) {
+		state.setPermissionTree = setPermissionTree
+	},
     setToken (state, token) {
       state.token = token
 			setToken(token)
@@ -50,32 +48,28 @@ export default {
     setMessageCount (state, count) {
       state.unreadCount = count
     },
-    setMessageUnreadList (state, list) {
-      state.messageUnreadList = list
-    },
-    setMessageReadedList (state, list) {
-      state.messageReadedList = list
-    },
-    setMessageTrashList (state, list) {
-      state.messageTrashList = list
-    },
-    updateMessageContentStore (state, { msg_id, content }) {
-      state.messageContentStore[msg_id] = content
-    },
-    moveMsg (state, { from, to, msg_id }) {
-      const index = state[from].findIndex(_ => _.msg_id === msg_id)
-      const msgItem = state[from].splice(index, 1)[0]
-      msgItem.loading = false
-      state[to].unshift(msgItem)
-    },
+		setMessageList (state, list) {
+			state.messageList = list
+		},
+		setMessageReadState (state, id) {
+			state.messageList.map((item) => {				
+				if(id && item.id == id){
+					if(item.state == 0){
+						item.state = 1;
+						state.unreadCount = --state.unreadCount;
+					}
+				}else{
+					item.state = 1;
+					state.unreadCount = 0;
+				}
+			})
+		},
 		updataLoginState (state, flag) {
 			state.isLogout = flag
 		}
   },
   getters: {
-    messageUnreadCount: state => state.messageUnreadList.length,
-    messageReadedCount: state => state.messageReadedList.length,
-    messageTrashCount: state => state.messageTrashList.length
+   
   },
   actions: {
     // 登录
@@ -86,21 +80,19 @@ export default {
           userName,
           password
         }).then(res => {
-          const data = res.data	
-										console.log(data)
-					baseJs('setItem', 'permission_list', JSON.stringify(data.permission_list));
-					baseJs('setItem', 'permission_tree', JSON.stringify(data.permission_tree));
-					baseJs('setItem', 'user', JSON.stringify(data.user));	
-					
-					
-					// commit('setAvator', data.avator)
-					commit('setUserName', data.user.username)
-					commit('setUserId', data.user.id)
-					commit('setAccess', data.permission_list)
-					commit('setHasGetInfo', true)
-					commit('setToken', btoa(data.token))
-					console.log(data.user)
-          resolve(data)
+            const data = res.data
+				  data.permission_tree = changeTree(data.permission_tree)										  
+			baseJs('setItem', 'permission_list', JSON.stringify(data.permission_list));
+			baseJs('setItem', 'permission_tree', JSON.stringify(data.permission_tree));
+			baseJs('setItem', 'user', JSON.stringify(data.user));	
+			// commit('setAvator', data.avator)
+			commit('setUserName', data.user.username)
+			commit('setUserId', data.user.id)
+			commit('setAccess', data.permission_list)
+			commit('setPermissionTree', data.permission_tree)
+			commit('setHasGetInfo', true)
+			commit('setToken', btoa(data.token))		
+            resolve(data)
         }).catch(err => {
           reject(err)
         })
@@ -110,13 +102,12 @@ export default {
     handleLogOut ({ state, commit }) {
       return new Promise((resolve, reject) => {
         logout(state.token).then(() => {
-					baseJs('removeItem', 'permission_list');
-					baseJs('removeItem', 'permission_tree');
-					baseJs('removeItem', 'user');	
-					
-          commit('setToken', '')
-          commit('setAccess', [])
-					commit('updataLoginState', true) //改变一下登录状态，主要是为了自动登录用
+			baseJs('removeItem', 'permission_list');
+			baseJs('removeItem', 'permission_tree');
+			baseJs('removeItem', 'user');						
+			commit('setToken', '')
+			commit('setAccess', [])
+			commit('updataLoginState', true) //改变一下登录状态，主要是为了自动登录用
           resolve()
         }).catch(err => {
           reject(err)
@@ -129,110 +120,56 @@ export default {
     },
     // 获取用户相关信息
     getUserInfo ({ state, commit }) {
-			console.log('getUserInfo')
+			
       return new Promise((resolve, reject) => {
-						let user = JSON.parse(baseJs('getItem', 'user'));	
-						let token = baseJs('getItem', 'token')
-						let permission_tree = JSON.parse(baseJs('getItem', 'permission_tree'))
-						let permission_list = JSON.parse(baseJs('getItem', 'permission_list'))
-						console.log(user, permission_list, permission_tree)
+			let user = JSON.parse(baseJs('getItem', 'user'));	
+			let token = baseJs('getItem', 'token')
+			let permission_tree = JSON.parse(baseJs('getItem', 'permission_tree'))
+			let permission_list = JSON.parse(baseJs('getItem', 'permission_list'))
+			
             commit('setUserName', user.username)
             commit('setUserId', user.id)
             commit('setAccess', permission_list)
-            commit('setHasGetInfo', true)
-						
+			commit('setPermissionTree', permission_tree)
+            commit('setHasGetInfo', true)						
             resolve(permission_list)
       }).catch(err => {
 				reject(err)
 			})
     },
-    // 此方法用来获取未读消息条数，接口只返回数值，不返回消息列表
-    getUnreadMessageCount ({ state, commit }) {
-      getUnreadCount().then(res => {
-        const { data } = res
-        commit('setMessageCount', data)
-      })
-    },
-    // 获取消息列表，其中包含未读、已读、回收站三个列表
-    getMessageList ({ state, commit }) {
-      return new Promise((resolve, reject) => {
-        getMessage().then(res => {
-          const { unread, readed, trash } = res.data
-          commit('setMessageUnreadList', unread.sort((a, b) => new Date(b.create_time) - new Date(a.create_time)))
-          commit('setMessageReadedList', readed.map(_ => {
-            _.loading = false
-            return _
-          }).sort((a, b) => new Date(b.create_time) - new Date(a.create_time)))
-          commit('setMessageTrashList', trash.map(_ => {
-            _.loading = false
-            return _
-          }).sort((a, b) => new Date(b.create_time) - new Date(a.create_time)))
-          resolve()
-        }).catch(error => {
-          reject(error)
-        })
-      })
-    },
-    // 根据当前点击的消息的id获取内容
-    getContentByMsgId ({ state, commit }, { msg_id }) {
-      return new Promise((resolve, reject) => {
-        let contentItem = state.messageContentStore[msg_id]
-        if (contentItem) {
-          resolve(contentItem)
-        } else {
-          getContentByMsgId(msg_id).then(res => {
-            const content = res.data
-            commit('updateMessageContentStore', { msg_id, content })
-            resolve(content)
-          })
-        }
-      })
-    },
-    // 把一个未读消息标记为已读
-    hasRead ({ state, commit }, { msg_id }) {
-      return new Promise((resolve, reject) => {
-        hasRead(msg_id).then(() => {
-          commit('moveMsg', {
-            from: 'messageUnreadList',
-            to: 'messageReadedList',
-            msg_id
-          })
-          commit('setMessageCount', state.unreadCount - 1)
-          resolve()
-        }).catch(error => {
-          reject(error)
-        })
-      })
-    },
-    // 删除一个已读消息到回收站
-    removeReaded ({ commit }, { msg_id }) {
-      return new Promise((resolve, reject) => {
-        removeReaded(msg_id).then(() => {
-          commit('moveMsg', {
-            from: 'messageReadedList',
-            to: 'messageTrashList',
-            msg_id
-          })
-          resolve()
-        }).catch(error => {
-          reject(error)
-        })
-      })
-    },
-    // 还原一个已删除消息到已读消息
-    restoreTrash ({ commit }, { msg_id }) {
-      return new Promise((resolve, reject) => {
-        restoreTrash(msg_id).then(() => {
-          commit('moveMsg', {
-            from: 'messageTrashList',
-            to: 'messageReadedList',
-            msg_id
-          })
-          resolve()
-        }).catch(error => {
-          reject(error)
-        })
-      })
-    }
+    // 获取通知消息列表
+		getMessageList ({ commit }, {readState = 0, pageIndex = 0, pageSize = 10 }) {
+			return new Promise((resolve, reject) => {
+				getMessageList({ readState, pageIndex, pageSize }).then((res) => {
+					if(res.data.results.length > 0){
+						const { unread_count } = res.data.results[0]
+						commit('setMessageCount', unread_count)
+						commit('setMessageList', res.data.results)
+					}
+					resolve(res)
+				})
+			}).catch(err => {
+				reject(err)
+			})
+		},
+	// 将消息之为已读；
+	patchMessageReaded ({ commit, state }, meg_id) {
+		return new Promise((resolve, reject) => {
+			patchMessageReaded(meg_id).then((res) => {
+					commit('setMessageReadState', meg_id);
+			})
+		})
+	 },
+	// 一键将所有消息之为已读；
+	patchAllMessageReaded({ commit, state }) {
+		return new Promise((resolve, reject) => {
+			patchAllMessageReaded().then( (res) => {
+				commit('setMessageReadState')
+				resolve(res)
+			})
+		}).catch(err => {
+			reject(err)
+		})
+	 }
   }
 }

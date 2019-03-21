@@ -39,7 +39,6 @@ export const getUnion = (arr1, arr2) => {
  * @description 判断要查询的数组是否至少有一个元素包含在目标数组中
  */
 export const hasOneOf = (targetarr, arr) => {
-	console.log(targetarr)
   return targetarr.some(_ => arr.indexOf(_) > -1)
 }
 
@@ -214,3 +213,84 @@ export const objEqual = (obj1, obj2) => {
   /* eslint-disable-next-line */
   else return !keysArr1.some(key => obj1[key] != obj2[key])
 }
+
+/** 
+ *工具函数，根据所传的id找出权限树中的兄弟集合或者自身；
+ * 
+ */
+export const  getObj = (data, id, type) => {
+	var results = [];
+	var idType = type == 'brother' ? 'parent':'id';
+	function foo(data, id){
+		data.map(item => {		
+       if(item[idType] == id){
+				  results.push(item)					
+			 }
+			 if(item.children && (item.children.length > 0)){
+				 foo(item.children, id)
+			 }
+		})
+	}
+	foo(data, id);
+	return results;
+}
+
+/* 
+ 找出权限树种的说有子集
+ 
+ */
+
+const getChildren = (data) => {
+	var results = [];
+	function foo(data){
+		data.map(item => {
+			if(item.children && (item.children.length > 0)){
+				 foo(item.children);
+			}else{
+				results.push(item)
+			}
+		})
+	}
+	foo(data);
+	return results;
+}
+
+//初始化权限树的数据，给他加上Indeterminate属性
+export const getItemIndeterminate = (data) => {
+	var arr = getChildren(data);
+	var results = arr.filter(item => {
+		return item.is_selected;
+	});
+	if(results.length == arr.length){
+		return false;
+	}else if(results.length > 0) {
+		return true;
+	}else {
+		return false;
+	}	
+}
+
+/*
+  获取所有的权限树节点；
+
+*/
+export const getALL = (data) => {
+	var results = [];
+	function foo(data) {
+		data.map(item => {
+			var obj = {
+				name: item.name,
+				is_selected: item.is_selected,
+				id:item.id
+			}
+			results.push(item);
+			if(item.children && (item.children.length > 0)) {
+				foo(item.children)
+			}
+		})
+	}
+	
+	foo(data);
+	return results;
+}
+

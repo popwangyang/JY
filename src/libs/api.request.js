@@ -1,6 +1,6 @@
 import HttpRequest from '@/libs/axios'
 import config from '@/config'
-
+import { spring } from '@/libs/util'
 import {
 	getToken,
 	setToken
@@ -26,8 +26,8 @@ const Ajax = new HttpRequest(baseUrl)
 const axios = {
 	request: (option) => {
 		return new Promise((resolve, reject) => {
-			console.log(option.url)
-			if (getToken()) {
+			if (getToken() && spring(10000)) {
+				console.log("刷新token")
 				Ajax.request({
 					url: 'copyright/api-token-refresh/',
 					data: {
@@ -42,6 +42,8 @@ const axios = {
 					}).catch(err => {
 						reject(err)
 					})
+				}).catch(err => {
+					reject(err)
 				})
 			} else {
 				Ajax.request(option).then((res) => {

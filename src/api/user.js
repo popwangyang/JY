@@ -31,59 +31,7 @@ export const logout = (token) => {
   })
 }
 
-export const getUnreadCount = () => {
-  return axios.request({
-    url: 'message/count',
-    method: 'get'
-  })
-}
 
-export const getMessage = () => {
-  return axios.request({
-    url: 'message/init',
-    method: 'get'
-  })
-}
-
-export const getContentByMsgId = msg_id => {
-  return axios.request({
-    url: 'message/content',
-    method: 'get',
-    params: {
-      msg_id
-    }
-  })
-}
-
-export const hasRead = msg_id => {
-  return axios.request({
-    url: 'message/has_read',
-    method: 'post',
-    data: {
-      msg_id
-    }
-  })
-}
-
-export const removeReaded = msg_id => {
-  return axios.request({
-    url: 'message/remove_readed',
-    method: 'post',
-    data: {
-      msg_id
-    }
-  })
-}
-
-export const restoreTrash = msg_id => {
-  return axios.request({
-    url: 'message/restore',
-    method: 'post',
-    data: {
-      msg_id
-    }
-  })
-}
 
 // 根据邮箱获取验证码
 export const getIdentifyungCode = (email) => {
@@ -121,3 +69,30 @@ export const ConfirmToModifyTheNewPassword = ({ username, code, password}) => {
 		}
 	})
 }
+// 获取消息列表；
+export const getMessageList = ({ readState, pageIndex, pageSize }) => {
+	return axios.request({
+		url: 'copyright/rbac/msg',
+		data: {
+			readState,
+			pageIndex,
+			pageSize
+		},
+		method: 'get'
+	})
+}
+//将未读消息置为已读；
+export const patchMessageReaded = (id) => {
+	return axios.request({
+		url: `copyright/rbac/msg/id`,
+		method: 'patch'
+	})
+}
+// 一键将消息置为已读
+export const patchAllMessageReaded = () => {
+	return axios.request({
+		url: `copyright/rbac/msg`,
+		method: 'patch'
+	})
+}
+

@@ -109,8 +109,7 @@ export default {
 					var color= 'blue';
 					var TextConent = null;
 					var showReason = false;
-					var isLastList = params.index == this.data.length-1 ? "right-end":"right-start";
-					console.log(params.index, this.data.length)
+					var isLastList = params.index == this.data.length-1 ? "right-end":"right-start";					
 					switch(parseInt(params.row.state)){
 						case 0:
 						   color = 'red'

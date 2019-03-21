@@ -1,6 +1,6 @@
 import axios from 'axios'
 import store from '@/store'
-import { getToken } from './util'
+import { getToken, setToken } from './util'
 
 import router from '../router'
 
@@ -43,8 +43,13 @@ class HttpRequest {
 
      const { data , status } = response
 
+      if(status == 403) {
+				setToken('')				
+				router.push({
+				  name: 'login'
+				})
+			}
 			return { data , status };
-      
 
     }, error => {
 			

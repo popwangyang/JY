@@ -58,9 +58,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'errorCount'
-    ]),
     tagNavList () {
       return this.$store.state.app.tagNavList
     },
@@ -77,12 +74,6 @@ export default {
     menuList () {
       return this.$store.getters.menuList
     },
-    local () {
-      return this.$store.state.app.local
-    },
-    hasReadErrorPage () {
-      return this.$store.state.app.hasReadErrorPage
-    },
     unreadCount () {
       return this.$store.state.user.unreadCount
     }
@@ -98,7 +89,7 @@ export default {
     ]),
     ...mapActions([
       'handleLogin',
-      'getUnreadMessageCount'
+      'getMessageList'
     ]),
     turnToPage (route) {
       let { name, params, query } = {}
@@ -167,7 +158,7 @@ export default {
       })
     }
     // 获取未读消息条数
-    this.getUnreadMessageCount()
+    this.getMessageList(0, 0, 10)
   }
 }
 </script>
