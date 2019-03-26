@@ -36,7 +36,7 @@
 <script>
 import './userPage.less'
 import Search from './Search'
-
+import { adminResetPsaaword } from '@/api/setting.js'
 export default {
   components: { Search },
   data() {
@@ -212,11 +212,14 @@ export default {
     },
     ok() {
       this.$refs.formInline.validate((valid) => {
+				// var id = 
         if (valid) {
-          this.$Message.success('密码修改成功!')
-        } else {
-          this.$Message.error('操作失败，请稍后重试!')
-        }
+					adminResetPsaaword({id, password}).then((res) => {
+						this.$Message.success('密码修改成功!')
+					}).catch((err) => {
+						this.$Message.error('操作失败，请稍后重试!')
+					})          
+        } 
       })
     },
     cancel() {
